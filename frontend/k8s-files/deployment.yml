@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-app
+  namespace: frontend-app
+spec:
+    replicas: 3
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 2
+        maxUnavailable: 1
+    selector:
+      matchLabels:
+         app: frontend
+    template:
+        metadata:
+          name: frontend-pod
+          labels:
+            app: frontend
+        spec:
+          containers:
+               - name: frontend-container
+                 image: shivareddy889/frontend-app:latest
+                 ports:
+                   - containerPort: 3000
+                 env:
+                   - name: Backend_url
+                     value: "http://backend-service.backend-app.svc.cluster.local:5000/api"
+            
+
