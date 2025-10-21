@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Frontend App</title>
+</head>
+<body>
+  <h1>Frontend Connected to Backend</h1>
+  <button onclick="callBackend()">Call Backend</button>
+  <pre id="response"></pre>
+
+  <script>
+    async function callBackend() {
+      const res = await fetch('/api');
+      const data = await res.json();
+      document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
