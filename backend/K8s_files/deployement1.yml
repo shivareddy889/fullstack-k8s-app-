@@ -21,7 +21,20 @@ spec:
       spec:
        containers:
         - name: backend-container
-          image:  shivareddy889/backend-app:latest
+          image:  shivareddy889/backend-app1:latest
           ports:
             - containerPort: 5000
-          
+          livenessProbe:
+             httpGet:
+              path: /healthz
+              port: 5000
+             initialDelaySeconds: 5
+             periodSeconds: 5
+             failureThreshold: 3
+          readinessProbe:
+             httpGet:
+               path: /ready
+               port: 5000
+             initialDelaySeconds: 5
+             periodSeconds: 5
+             failureThreshold: 3
