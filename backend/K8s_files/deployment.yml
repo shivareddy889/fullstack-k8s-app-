@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: backend-app
+    namespace: backend-app
+spec:
+   replicas: 3
+   strategy:
+     type: RollingUpdate
+     rollingUpdate:
+        maxSurge: 2
+        maxUnavailable: 1
+   selector:
+      matchLabels:
+         app: backend
+   template:
+      metadata:
+         name: backendpod
+         labels:
+           app: backend
+      spec:
+       containers:
+        - name: backend-container
+          image:  shivareddy889/backend-app:latest
+          ports:
+            - containerPort: 5000
+        
+           
+     
