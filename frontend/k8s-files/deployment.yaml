@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: frontend-deploy
+   namespace: frontend-app
+spec:
+   replicas: 2
+   strategy:
+       type: RollingUpdate
+       rollingUpdate:
+           maxSurge: 1
+           maxUnavailable: 1
+   selector:
+      matchLabels:
+           app: frontend
+   template:
+       metadata:
+          name: frontendpod
+          labels: 
+              app: frontend
+       spec:
+         containers:
+           - name: frontendcontainer
+             image: shivareddy889/frontend-app:latest
+             ports:
+                - containerPort: 3000
+             livenessProbe:
+              httpGet:
+               path: /
+               port: 3000
+              initialDelaySeconds: 10       # Wait 10s after start before first probe
+              periodSeconds: 10             # Check every 10s
+              timeoutSeconds: 2             # Fail if no response in 2s
+              failureThreshold: 3           # 3 consecutive failures = restart container
+              successThreshold: 1           # 1 success = healthy again
+             readinessProbe:
+                httpGet:
+                   path: /
+                   port: 3000
+                initialDelaySeconds: 5        # Start checking after 5s
+                periodSeconds: 5              # Check every 5s
+                timeoutSeconds: 2
+                failureThreshold: 3
+             env:
+              - name: BACKEND_URL
+                value: "http://backend-service.backend.svc.cluster.local:5000/api"
